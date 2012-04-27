@@ -1,7 +1,7 @@
 /*
  * Author:	Petr Vacha
- * Projekt: Diploma thesis
- * Program: CGP 
+ * Projekt:	Diploma thesis
+ * Program:	CGP 
  * Email:	xvacha03@stud.fit.vutbr.cz
  * Datum:	2012
  */
@@ -24,7 +24,7 @@ chromozome *population[POPULATION_SIZE];
 int param_in = 0;
 int param_out = 0;
 
-int chromozomeLenght = PARAM_M*PARAM_N*(BLOCK_IN+1) + param_out;
+int chromozomeLenght = 0;
 int maxfitness  = 0; //max. hodnota fitness
 
 
@@ -32,6 +32,24 @@ int maxfitness  = 0; //max. hodnota fitness
 int **datainput = NULL;
 int **dataoutput = NULL;
 
+
+void allocPopulation()
+{	
+	chromozomeLenght = PARAM_M*PARAM_N*(BLOCK_IN+1) + param_out;
+
+	for (int i = 0 ; i < POPULATION_SIZE; i++) {
+		population[i] = new chromozome [chromozomeLenght];
+	}	
+}
+
+
+void freePopulation()
+{	
+	for (int i = 0 ; i < POPULATION_SIZE; i++) {
+		delete [] population[i];
+	}	
+	
+}
 
 /*
  * Alokuje datova pole pro trenovaci data.
@@ -96,9 +114,7 @@ void readData()
 		
 		lenght = pow(2, param_in);
 		allocData(param_in, param_out, lenght);
-		datainput[0][0] = 1;
 	
-		//	printf("ok\n");
 		fseek (data ,0 , SEEK_SET);
 		
 		int inputArray, inputIndex, outputArray, outputIndex;
@@ -159,21 +175,6 @@ inline void mutace()
 
 }
 
-void allocPopulation()
-{	
-	for (int i = 0 ; i < POPULATION_SIZE; i++) {
-		population[i] = new chromozome [chromozomeLenght];
-	}	
-}
-
-
-void freePopulation()
-{	
-	for (int i = 0 ; i < POPULATION_SIZE; i++) {
-		delete [] population[i];
-	}	
-	
-}
 
 /*
  * Hlavni funkce
@@ -184,7 +185,7 @@ int main(int argc, char* argv[])
 	readData();
 	allocPopulation();
 	
-	
+
 	freePopulation();
 	freeData();
 	return 0;
