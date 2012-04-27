@@ -9,19 +9,25 @@
 #include <stdio.h>
 #include <math.h>
 
-#define VELIKOST_POPULACE 5
+#define POPULATION_SIZE 5
 #define L_BACK
 #define PARAM_M 40
 #define PARAM_N 1
 
+#define BLOCK_IN 2
 #define DATAFILE "parita4.txt"
 
-typedef int *chromozom;             
-chromozom *populace[VELIKOST_POPULACE]; 
+typedef int *chromozome;             
+chromozome *population[POPULATION_SIZE]; 
   
 
 int param_in = 0;
 int param_out = 0;
+
+int chromozomeLenght = PARAM_M*PARAM_N*(BLOCK_IN+1) + param_out;
+int maxfitness  = 0; //max. hodnota fitness
+
+
 
 int **datainput = NULL;
 int **dataoutput = NULL;
@@ -43,7 +49,6 @@ void allocData(int input_x, int output_x, int arrayLenght)
 	for (int i = 0 ; i < output_x ; i++) {
 		dataoutput[i] = new int[arrayLenght];
 	}
-	
 	
 }
 
@@ -142,6 +147,7 @@ void readData()
  */
 inline int fitness()
 {
+
  return 0;
 }
 
@@ -150,9 +156,24 @@ inline int fitness()
  */
 inline void mutace()
 {
+
+}
+
+void allocPopulation()
+{	
+	for (int i = 0 ; i < POPULATION_SIZE; i++) {
+		population[i] = new chromozome [chromozomeLenght];
+	}	
 }
 
 
+void freePopulation()
+{	
+	for (int i = 0 ; i < POPULATION_SIZE; i++) {
+		delete [] population[i];
+	}	
+	
+}
 
 /*
  * Hlavni funkce
@@ -161,6 +182,10 @@ int main(int argc, char* argv[])
 {
 	
 	readData();
+	allocPopulation();
+	
+	
+	freePopulation();
 	freeData();
 	return 0;
 }
