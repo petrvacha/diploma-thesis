@@ -180,24 +180,7 @@ inline int fitness()
  return 0;
 }
 
-/*
- * Mutace jedince.
- */
-inline void mutace(int populationIndex)
-{
-	int gen;
-	
-	for (int i=0; i < MUTATIONS; i++) {
-		gen = rand() % chromozomeLength;
-		
-		if (gen % BLOCK_SIZE < 2) {
-			population[populationIndex][gen] = rand() % FUNCTIONS;
-			
-		} else {
-			
-		}
-	}
-}
+
 
 /*
  * Generator cisel pro bloky.
@@ -251,6 +234,19 @@ inline int generator(int gene)
 }
 
 /*
+ * Mutace kandidatniho reseni.
+ */
+inline void mutace(int populationIndex)
+{
+	int gene;
+	
+	for (int i=0; i < MUTATIONS; i++) {
+		gene = rand() % chromozomeLength;
+		population[populationIndex][gene] = generator(gene);
+	}
+}
+
+/*
  * Vygenerovani nahodnou populaci.
  */
 void generationRandomPopulation()
@@ -279,8 +275,20 @@ int main(int argc, char* argv[])
 				printf(")(");
 			printf("%d",population[p][i]);
 		}
-		printf("\n");
+		printf("\n");break;
 	}
+	
+	mutace(0);
+	
+	for (int p=0; p<POPULATION_SIZE; p++) {
+		for (int i=0; i<chromozomeLength; i++) {
+			if(i % 3 == 0)
+				printf(")(");
+			printf("%d",population[p][i]);
+		}
+		printf("\n");break;
+	}
+		
 	freePopulation();
 	freeData();
 	return 0;
