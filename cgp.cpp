@@ -211,13 +211,13 @@ void generationRandomPopulation()
 						min = blockIndex - PARAM_N*L_BACK;
 						
 						if(min<=param_in) {
-							population[p][i] = rand() % max;
+							population[p][i] = rand() % (max+1);
 							
 						} else {
-							tmpCount = max + min + param_in;
+							tmpCount = max - min + param_in+1;
 							randomNumber = rand() % tmpCount;
 							if (randomNumber >= param_in) {
-								population[p][i] = randomNumber - param_in + min -1;
+								population[p][i] = randomNumber - param_in + min;
 								
 							} else {
 								population[p][i] = randomNumber;
@@ -232,7 +232,7 @@ void generationRandomPopulation()
 					population[p][i] = rand() % FUNCTIONS;
 				}
 			//	if (i % 3 != 2) //DEBUG
-			//		printf("i=%d. block=%d max=%d min=%d \t\tdrat=%d\n", i, blockIndex, max, min, population[p][i]);
+					printf("i=%d. block=%d max=%d min=%d \t%d\n", i, blockIndex, max, min, population[p][i]);
 			}
 		}
 	}
