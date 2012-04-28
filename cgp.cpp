@@ -32,7 +32,9 @@ int maxfitness  = 0; //max. hodnota fitness
 int **datainput = NULL;
 int **dataoutput = NULL;
 
-
+/*
+ * Alokuje pole pro populace.
+ */
 void allocPopulation()
 {	
 	chromozomeLenght = PARAM_M*PARAM_N*(BLOCK_IN+1) + param_out;
@@ -42,7 +44,9 @@ void allocPopulation()
 	}	
 }
 
-
+/*
+ * Uvolni pole pro populace.
+ */
 void freePopulation()
 {	
 	for (int i = 0 ; i < POPULATION_SIZE; i++) {
