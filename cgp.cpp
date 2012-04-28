@@ -198,7 +198,7 @@ void generationRandomPopulation()
 	int randomNumber;
 	int tmpCount;
 
-	for (int p=0; p<1; p++) {
+	for (int p=0; p<POPULATION_SIZE; p++) {
 		for (int i=0; i<chromozomeLength; i++) {
 			if (i < BLOCKS_SIZE) {
 				if (i % BLOCK_SIZE < 2) {
@@ -231,8 +231,8 @@ void generationRandomPopulation()
 				} else {
 					population[p][i] = rand() % FUNCTIONS;
 				}
-			//	if (i % 3 != 2) //DEBUG
-					printf("i=%d. block=%d max=%d min=%d \t%d\n", i, blockIndex, max, min, population[p][i]);
+			} else { // vystup
+				population[p][i] = rand() % (BLOCK_INDICES + param_in);
 			}
 		}
 	}
@@ -255,7 +255,7 @@ int main(int argc, char* argv[])
 				printf(")(");
 			printf("%d",population[p][i]);
 		}
-		printf("\n");break;
+		printf("\n");
 	}
 	freePopulation();
 	freeData();
