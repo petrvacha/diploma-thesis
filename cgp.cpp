@@ -28,6 +28,9 @@
 
 typedef int *chromozome;             
 chromozome population[POPULATION_SIZE]; 
+
+chromozome mainColumn; //pro počítání fitness
+chromozome tmpColumn; // pro přepočet fitness
   
 
 int param_in = 0;
@@ -51,6 +54,9 @@ void allocPopulation()
 	for (int i = 0 ; i < POPULATION_SIZE; i++) {
 		population[i] = new int [chromozomeLength];
 	}	
+	
+	mainColumn = new int [chromozomeLength];
+	tmpColumn = new int [chromozomeLength];
 }
 
 /*
@@ -60,8 +66,10 @@ void freePopulation()
 {	
 	for (int i = 0 ; i < POPULATION_SIZE; i++) {
 		delete [] population[i];
-	}	
-	
+	}
+
+	delete [] mainColumn;
+	delete [] tmpColumn;
 }
 
 /*
@@ -171,16 +179,6 @@ void readData()
 	
 }
 
-/*
- * Ohodnoceni populace.
- */
-inline int fitness()
-{
-
- return 0;
-}
-
-
 
 /*
  * Generator cisel pro bloky.
@@ -257,6 +255,17 @@ void generationRandomPopulation()
 		}
 	}
 }
+
+
+/*
+ * Ohodnoceni populace.
+ */
+inline int fitness(int populationIndex)
+{
+ 	return 0;
+}
+
+
 
 /*
  * Hlavni funkce.
