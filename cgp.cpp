@@ -7,24 +7,32 @@
  */
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
 #include <math.h>
 
 #define POPULATION_SIZE 5
-#define L_BACK
-#define PARAM_M 40
+
+#define PARAM_M 8
 #define PARAM_N 1
 
-#define BLOCK_IN 2
+#define FUNCTIONS 6				// pocet funkci
+#define L_BACK PARAM_M			// l-back
+#define BLOCK_IN 2 				// pocet vstupu
+#define BLOCK_SIZE (BLOCK_IN+1) 	// delka jednoho bloku v chromozumo
+#define BLOCKS_SIZE (BLOCK_SIZE*PARAM_M*PARAM_N) 	//delka vsech bloku v chromozomu
+
+#define BLOCK_INDICES (PARAM_M*PARAM_N) 			//pocet bloku
 #define DATAFILE "parita4.txt"
 
 typedef int *chromozome;             
-chromozome *population[POPULATION_SIZE]; 
+chromozome population[POPULATION_SIZE]; 
   
 
 int param_in = 0;
 int param_out = 0;
 
-int chromozomeLenght = 0;
+int chromozomeLength = 0;
 int maxfitness  = 0; //max. hodnota fitness
 
 
@@ -33,19 +41,19 @@ int **datainput = NULL;
 int **dataoutput = NULL;
 
 /*
- * Alokuje pole pro populace.
+ * Alokuje pole pro populaci.
  */
 void allocPopulation()
 {	
-	chromozomeLenght = PARAM_M*PARAM_N*(BLOCK_IN+1) + param_out;
+	chromozomeLength = BLOCKS_SIZE + param_out;
 
 	for (int i = 0 ; i < POPULATION_SIZE; i++) {
-		population[i] = new chromozome [chromozomeLenght];
+		population[i] = new int [chromozomeLength];
 	}	
 }
 
 /*
- * Uvolni pole pro populace.
+ * Uvolni pole pro populaci.
  */
 void freePopulation()
 {	
@@ -89,7 +97,7 @@ void freeData()
 }
 
 /*
- * Nacteni vstupnich dat
+ * Nacteni vstupnich dat.
  */
 void readData()
 {
@@ -146,14 +154,14 @@ void readData()
 			}
 		}	
 		
-		for(int i =0;i<lenght;i++){ // test
+	/*	for(int i =0;i<lenght;i++){ // test
 			for(int x=0;x<param_in;x++)
 				printf("%d",datainput[x][i]);
 			for(int y=0;y<param_out;y++)
 				printf("%d",dataoutput[y][i]);
 			printf("\n");
 		}	
-		
+	*/
 		fclose (data);
 
 	} else {
@@ -163,7 +171,7 @@ void readData()
 }
 
 /*
- * Ohodnoceni populace
+ * Ohodnoceni populace.
  */
 inline int fitness()
 {
@@ -172,24 +180,83 @@ inline int fitness()
 }
 
 /*
- * Mutace na populaci
+ * Mutace jedince.
  */
 inline void mutace()
 {
 
 }
 
+/*
+ * Vygenerovani nahodnou populaci.
+ */
+void generationRandomPopulation()
+{
+	int min = -1;
+	int max = -1;
+	int blockIndex = -1;
+	int randomNumber;
+	int tmpCount;
+
+	for (int p=0; p<1; p++) {
+		for (int i=0; i<chromozomeLength; i++) {
+			if (i < BLOCKS_SIZE) {
+				if (i % BLOCK_SIZE < 2) {
+				
+					if (i >= BLOCK_SIZE*PARAM_N) { //neni v prvnim sloupci
+					 
+						blockIndex = i/BLOCK_SIZE + param_in + PARAM_N - 1;
+						
+						max = blockIndex - (PARAM_N - (blockIndex % PARAM_N));
+						min = blockIndex - PARAM_N*L_BACK;
+						
+						if(min<=param_in) {
+							population[p][i] = rand() % max;
+							
+						} else {
+							tmpCount = max + min + param_in;
+							randomNumber = rand() % tmpCount;
+							if (randomNumber >= param_in) {
+								population[p][i] = randomNumber - param_in + min -1;
+								
+							} else {
+								population[p][i] = randomNumber;
+							}
+						}
+						
+					} else {
+						population[p][i] = rand() % param_in;
+					}
+					
+				} else {
+					population[p][i] = rand() % FUNCTIONS;
+				}
+			//	if (i % 3 != 2) //DEBUG
+			//		printf("i=%d. block=%d max=%d min=%d \t\tdrat=%d\n", i, blockIndex, max, min, population[p][i]);
+			}
+		}
+	}
+}
 
 /*
- * Hlavni funkce
+ * Hlavni funkce.
  */
 int main(int argc, char* argv[])
 {
-	
+	srand ( time(NULL) );
 	readData();
 	allocPopulation();
-	
+	generationRandomPopulation();
 
+
+	for (int p=0; p<POPULATION_SIZE; p++) {
+		for (int i=0; i<chromozomeLength; i++) {
+			if(i % 3 == 0)
+				printf(")(");
+			printf("%d",population[p][i]);
+		}
+		printf("\n");break;
+	}
 	freePopulation();
 	freeData();
 	return 0;
