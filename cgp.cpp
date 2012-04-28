@@ -16,6 +16,7 @@
 #define PARAM_M 8
 #define PARAM_N 1
 
+#define MUTATIONS 3
 #define FUNCTIONS 6				// pocet funkci
 #define L_BACK PARAM_M			// l-back
 #define BLOCK_IN 2 				// pocet vstupu
@@ -182,9 +183,71 @@ inline int fitness()
 /*
  * Mutace jedince.
  */
-inline void mutace()
+inline void mutace(int populationIndex)
 {
+	int gen;
+	
+	for (int i=0; i < MUTATIONS; i++) {
+		gen = rand() % chromozomeLength;
+		
+		if (gen % BLOCK_SIZE < 2) {
+			population[populationIndex][gen] = rand() % FUNCTIONS;
+			
+		} else {
+			
+		}
+	}
+}
 
+/*
+ * Generator cisel pro bloky.
+ */
+inline int generator(int gene)
+{
+	int min = -1;
+	int max = -1;
+	int blockIndex = -1;
+	int randomNumber;
+	int tmpCount;
+	
+	int result = -1;
+
+	if (gene < BLOCKS_SIZE) {
+		if (gene % BLOCK_SIZE < 2) {
+		
+			if (gene >= BLOCK_SIZE*PARAM_N) { //neni v prvnim sloupci
+			 
+				blockIndex = gene/BLOCK_SIZE + param_in + PARAM_N - 1;
+				
+				max = blockIndex - (PARAM_N - (blockIndex % PARAM_N));
+				min = blockIndex - PARAM_N*L_BACK;
+				
+				if(min<=param_in) {
+					result = rand() % (max+1);
+					
+				} else {
+					tmpCount = max - min + param_in+1;
+					randomNumber = rand() % tmpCount;
+					if (randomNumber >= param_in) {
+						result = randomNumber - param_in + min;
+						
+					} else {
+						result = randomNumber;
+					}
+				}
+				
+			} else {
+				result = rand() % param_in;
+			}
+			
+		} else {
+			result = rand() % FUNCTIONS;
+		}
+	} else { // vystup
+		result = rand() % (BLOCK_INDICES + param_in);
+	}
+	
+	return result;
 }
 
 /*
@@ -192,48 +255,9 @@ inline void mutace()
  */
 void generationRandomPopulation()
 {
-	int min = -1;
-	int max = -1;
-	int blockIndex = -1;
-	int randomNumber;
-	int tmpCount;
-
-	for (int p=0; p<POPULATION_SIZE; p++) {
-		for (int i=0; i<chromozomeLength; i++) {
-			if (i < BLOCKS_SIZE) {
-				if (i % BLOCK_SIZE < 2) {
-				
-					if (i >= BLOCK_SIZE*PARAM_N) { //neni v prvnim sloupci
-					 
-						blockIndex = i/BLOCK_SIZE + param_in + PARAM_N - 1;
-						
-						max = blockIndex - (PARAM_N - (blockIndex % PARAM_N));
-						min = blockIndex - PARAM_N*L_BACK;
-						
-						if(min<=param_in) {
-							population[p][i] = rand() % (max+1);
-							
-						} else {
-							tmpCount = max - min + param_in+1;
-							randomNumber = rand() % tmpCount;
-							if (randomNumber >= param_in) {
-								population[p][i] = randomNumber - param_in + min;
-								
-							} else {
-								population[p][i] = randomNumber;
-							}
-						}
-						
-					} else {
-						population[p][i] = rand() % param_in;
-					}
-					
-				} else {
-					population[p][i] = rand() % FUNCTIONS;
-				}
-			} else { // vystup
-				population[p][i] = rand() % (BLOCK_INDICES + param_in);
-			}
+	for (int p=0; p < POPULATION_SIZE; p++) {
+		for (int i=0; i < chromozomeLength; i++) {
+			population[p][i] = generator(i);
 		}
 	}
 }
