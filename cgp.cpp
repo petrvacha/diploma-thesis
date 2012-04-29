@@ -332,8 +332,8 @@ inline int fitness(int populationIndex)
 		
 	}
 	
+	fail = 0;
 	for (int d=0, i=(param_in + BLOCK_INDICES); d < param_out; i++, d++) {
-		fail = 0;
 		if (dataoutput[d][0] != tmpPopulation[i]) {
 			fail = 1;
 		}
