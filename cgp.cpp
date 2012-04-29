@@ -20,7 +20,7 @@
 #define FUNCTIONS 6				// pocet funkci
 #define L_BACK PARAM_M			// l-back
 #define BLOCK_IN 2 				// pocet vstupu
-#define BLOCK_SIZE (BLOCK_IN+1) 	// delka jednoho bloku v chromozumo
+#define BLOCK_SIZE (BLOCK_IN+1) 	// delka jednoho bloku v chromozomu
 #define BLOCKS_SIZE (BLOCK_SIZE*PARAM_M*PARAM_N) 	//delka vsech bloku v chromozomu
 
 #define BLOCK_INDICES (PARAM_M*PARAM_N) 			//pocet bloku
@@ -29,8 +29,7 @@
 typedef int *chromozome;             
 chromozome population[POPULATION_SIZE]; 
 
-chromozome mainColumn; //pro počítání fitness
-chromozome tmpColumn; // pro přepočet fitness
+int *tmpPopulation; // pro přepočet fitness
   
 
 int param_in = 0;
@@ -55,8 +54,7 @@ void allocPopulation()
 		population[i] = new int [chromozomeLength];
 	}	
 	
-	mainColumn = new int [chromozomeLength];
-	tmpColumn = new int [chromozomeLength];
+	tmpPopulation = new int [param_in + BLOCK_INDICES + param_out];
 }
 
 /*
@@ -68,8 +66,7 @@ void freePopulation()
 		delete [] population[i];
 	}
 
-	delete [] mainColumn;
-	delete [] tmpColumn;
+	delete [] tmpPopulation;
 }
 
 /*
@@ -262,7 +259,63 @@ void generationRandomPopulation()
  */
 inline int fitness(int populationIndex)
 {
- 	return 0;
+	int fitness = 0;
+	int block = param_in;
+	int x;
+	int in1, in2;
+
+	for (int i=0; i < param_in; i++) {
+		tmpPopulation[i] = datainput[i][1];
+		//printf("%d ",tmpPopulation[i]);
+	}
+	//printf("\n");
+
+	for (int i=0; i < chromozomeLength; i++) {//printf("%d, ",population[populationIndex][i]);
+		if (i < BLOCK_INDICES) {
+			x = i % BLOCK_SIZE;
+			if (x == 0) {
+				in1 = i;printf("in1 %d, ",tmpPopulation[population[populationIndex][in1]]);
+			}
+		
+			if (x == 1) {
+				in2 = i;printf("in2 %d, ",tmpPopulation[population[populationIndex][in2]]);
+			}
+
+			if (x == 2) { // funkce
+				printf("f %d, ",population[populationIndex][i]);
+				switch(population[populationIndex][i]) {
+				      case 0: tmpPopulation[block] = tmpPopulation[population[populationIndex][in1]]; 
+				      break;       		//in1
+
+				      case 1: tmpPopulation[block] = tmpPopulation[population[populationIndex][in1]] & tmpPopulation[population[populationIndex][in2]];
+				      break; 		//and
+				      case 2: tmpPopulation[block] = tmpPopulation[population[populationIndex][in1]] ^ tmpPopulation[population[populationIndex][in2]];
+				      break; 		//xor
+
+				      case 3: tmpPopulation[block] = (tmpPopulation[population[populationIndex][in1]]==1)?0:1; 			  				      
+				      break;  			//not in1
+				      case 4: tmpPopulation[block] = (tmpPopulation[population[populationIndex][in2]]==1)?0:1; 	
+				      break;  			//not in2
+
+				      case 5: tmpPopulation[block] = tmpPopulation[population[populationIndex][in1]] | tmpPopulation[population[populationIndex][in2]]; 
+
+				      break; 		//or
+				      case 6: tmpPopulation[block] = tmpPopulation[population[populationIndex][in1]] & ((tmpPopulation[population[populationIndex][in2]]==1)?0:1);
+				      break;
+				      case 7: tmpPopulation[block] = ((tmpPopulation[population[populationIndex][in1]] & tmpPopulation[population[populationIndex][in2]])==1)?0:1;
+				      break;	//nand
+				      case 8: tmpPopulation[block] = ((tmpPopulation[population[populationIndex][in1]] | tmpPopulation[population[populationIndex][in2]])==1)?0:1;
+				      break;	//nor
+				}
+				printf("vysledek: %d\n", tmpPopulation[block]);
+			}
+			block++;
+		}
+		
+	}
+
+	
+ 	return fitness;
 }
 
 
@@ -287,16 +340,9 @@ int main(int argc, char* argv[])
 		printf("\n");break;
 	}
 	
-	mutace(0);
+	fitness(0);
 	
-	for (int p=0; p<POPULATION_SIZE; p++) {
-		for (int i=0; i<chromozomeLength; i++) {
-			if(i % 3 == 0)
-				printf(")(");
-			printf("%d",population[p][i]);
-		}
-		printf("\n");break;
-	}
+
 		
 	freePopulation();
 	freeData();
