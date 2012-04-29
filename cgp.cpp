@@ -260,6 +260,7 @@ void generationRandomPopulation()
 inline int fitness(int populationIndex)
 {
 	int fitness = 0;
+	int fail;
 	int block = param_in;
 	int x;
 	int in1, in2;
@@ -330,8 +331,19 @@ inline int fitness(int populationIndex)
 		}
 		
 	}
-
 	
+	for (int d=0, i=(param_in + BLOCK_INDICES); d < param_out; i++, d++) {
+		fail = 0;
+		if (dataoutput[d][0] != tmpPopulation[i]) {
+			fail = 1;
+		}
+	}
+	
+	if (fail == 0) {
+		fitness++;
+	}
+
+	printf("%d\n", fitness);
  	return fitness;
 }
 
