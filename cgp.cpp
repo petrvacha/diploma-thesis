@@ -270,8 +270,8 @@ inline int fitness(int populationIndex)
 	}
 	//printf("\n");
 
-	for (int i=0; i < chromozomeLength; i++) {//printf("%d, ",population[populationIndex][i]);
-		if (i < BLOCK_INDICES) {
+	for (int i=0; i < chromozomeLength; i++) {//printf("%d, ",BLOCK_INDICES);
+		if (i < BLOCKS_SIZE) {
 			x = i % BLOCK_SIZE;
 			if (x == 0) {
 				in1 = i;printf("in1 %d, ",tmpPopulation[population[populationIndex][in1]]);
@@ -282,34 +282,51 @@ inline int fitness(int populationIndex)
 			}
 
 			if (x == 2) { // funkce
-				printf("f %d, ",population[populationIndex][i]);
+				//printf("f %d, ",population[populationIndex][i]);
 				switch(population[populationIndex][i]) {
 				      case 0: tmpPopulation[block] = tmpPopulation[population[populationIndex][in1]]; 
+				      printf("in1 ");
 				      break;       		//in1
 
 				      case 1: tmpPopulation[block] = tmpPopulation[population[populationIndex][in1]] & tmpPopulation[population[populationIndex][in2]];
+				      printf("and ");
 				      break; 		//and
 				      case 2: tmpPopulation[block] = tmpPopulation[population[populationIndex][in1]] ^ tmpPopulation[population[populationIndex][in2]];
+				      printf("xor ");
 				      break; 		//xor
 
-				      case 3: tmpPopulation[block] = (tmpPopulation[population[populationIndex][in1]]==1)?0:1; 			  				      
+				      case 3: tmpPopulation[block] = (tmpPopulation[population[populationIndex][in1]]==1)?0:1; 	
+				      printf("not in1 ");		  				      
 				      break;  			//not in1
 				      case 4: tmpPopulation[block] = (tmpPopulation[population[populationIndex][in2]]==1)?0:1; 	
+				      printf("not in2 ");	
 				      break;  			//not in2
 
 				      case 5: tmpPopulation[block] = tmpPopulation[population[populationIndex][in1]] | tmpPopulation[population[populationIndex][in2]]; 
-
+					  printf("or ");
 				      break; 		//or
 				      case 6: tmpPopulation[block] = tmpPopulation[population[populationIndex][in1]] & ((tmpPopulation[population[populationIndex][in2]]==1)?0:1);
-				      break;
+				      break;  // in1 AND NOT in2
 				      case 7: tmpPopulation[block] = ((tmpPopulation[population[populationIndex][in1]] & tmpPopulation[population[populationIndex][in2]])==1)?0:1;
 				      break;	//nand
 				      case 8: tmpPopulation[block] = ((tmpPopulation[population[populationIndex][in1]] | tmpPopulation[population[populationIndex][in2]])==1)?0:1;
 				      break;	//nor
 				}
-				printf("vysledek: %d\n", tmpPopulation[block]);
+				printf("vysledek: %d, block %d  \t\t\t", tmpPopulation[block], block);
+				for (int i=0; i<BLOCK_INDICES+param_in+param_out; i++) {
+					printf("%d", tmpPopulation[i]);
+				}
+				printf("\n");
+				block++;
 			}
-			block++;
+			
+		} else {
+			tmpPopulation[block] = tmpPopulation[population[populationIndex][i]];
+			printf("vystup je napojen na blok: %d  \t\t\t\t\t", population[populationIndex][i]);
+				for (int i=0; i<BLOCK_INDICES+param_in+param_out; i++) {
+					printf("%d", tmpPopulation[i]);
+				}
+			printf("\n");
 		}
 		
 	}
