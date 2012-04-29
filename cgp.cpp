@@ -38,7 +38,7 @@ int param_out = 0;
 int chromozomeLength = 0;
 int maxfitness  = 0; //max. hodnota fitness
 
-
+int arrayLenght; // pocet radku v trenovacich datech
 
 int **datainput = NULL;
 int **dataoutput = NULL;
@@ -109,7 +109,6 @@ void readData()
 {
 	int c;
 	int afterInput = 0;
-	int lenght;
 	
 	FILE *data = fopen(DATAFILE, "r");
 	if (data) {
@@ -130,8 +129,8 @@ void readData()
 			c = fgetc(data);
 		}
 		
-		lenght = pow(2, param_in);
-		allocData(param_in, param_out, lenght);
+		arrayLenght = pow(2, param_in);
+		allocData(param_in, param_out, arrayLenght);
 	
 		fseek (data ,0 , SEEK_SET);
 		
