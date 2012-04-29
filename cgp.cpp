@@ -265,7 +265,7 @@ inline int fitness(int populationIndex)
 	int in1, in2;
 
 	for (int i=0; i < param_in; i++) {
-		tmpPopulation[i] = datainput[i][1];
+		tmpPopulation[i] = datainput[i][0];
 		//printf("%d ",tmpPopulation[i]);
 	}
 	//printf("\n");
