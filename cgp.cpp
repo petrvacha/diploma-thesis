@@ -369,8 +369,6 @@ inline int fitness(int populationIndex)
 			fitness++;
 		}
 	}
-	if(fitness != 8)
-		printf("fitness = %d\n", fitness);
  	return fitness;
 }
 
