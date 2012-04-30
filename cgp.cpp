@@ -15,7 +15,7 @@
 #define POPULATION_SIZE 5
 #define RUNS 100
 
-#define GENERATIONS 10000000
+#define GENERATIONS 1000
 
 #define PARAM_M 3
 #define PARAM_N 1
@@ -45,6 +45,7 @@ int chromozomeLength = 0;
 int maxfitness  = 0; //max. hodnota fitness
 
 int arrayLength; // pocet radku v trenovacich datech
+int maxFitness; //maximalni fitness
 
 int **datainput = NULL;
 int **dataoutput = NULL;
@@ -136,7 +137,7 @@ void readData()
 			c = fgetc(data);
 		}
 		
-		arrayLength = pow(2, param_in);
+		arrayLength = maxFitness = pow(2, param_in);
 		allocData(param_in, param_out);
 	
 		fseek (data ,0 , SEEK_SET);
@@ -400,50 +401,59 @@ void printChromozome(int populationIndex)
  */
 int main(int argc, char* argv[])
 {
+	int bestCandidate;
+	int bestFitness;
+	int neutral;
+	int fitnessValue;
+	int generation;
+	int success = 0;
+	
 	srand ( time(NULL) );
 	readData();
 	allocPopulation();
-	generationRandomPopulation();
+
+
+	for(int run=0; run < RUNS; run++) {
 	
-	int bestCandidate;
-	int bestFitness;
-	
-	int neutral;
-	int fitnessValue;
-
-	int run = 0;
-	int generation = 0;
-
-
-	bestCandidate = -1;
-	bestFitness = -1;
-	while (generation < GENERATIONS) {
-		neutral = 0;
-		for (int p = 0; p<POPULATION_SIZE; p++) {
-			fitnessValue = fitness(p);
-			if (fitnessValue > bestFitness) {
-				bestFitness = fitnessValue;
-				bestCandidate = p;
-			}
-			
-			if (fitnessValue == bestFitness && p != bestCandidate && !neutral) {
-				bestFitness = fitnessValue;
-				bestCandidate = p;
-				neutral = 1;
-			}
-		}
+		bestCandidate = -1;
+		bestFitness = -1;
+		generation = 0;
+		generationRandomPopulation();
 		
-		for (int p = 0; p<POPULATION_SIZE; p++) {		
-			if (p == bestCandidate) {
-				continue;
-			}
-			COPY_CHROMOZOME(population[bestCandidate], population[p]);
-			mutace(p);
+		while (generation < GENERATIONS) {
+			neutral = 0;
+			for (int p = 0; p<POPULATION_SIZE; p++) {
+				fitnessValue = fitness(p);
+				if (fitnessValue > bestFitness) {
+					bestFitness = fitnessValue;
+					bestCandidate = p;
+				}
 			
-		}
+				if (fitnessValue == bestFitness && p != bestCandidate && !neutral) {
+					bestFitness = fitnessValue;
+					bestCandidate = p;
+					neutral = 1;
+				}
+			}
+		
+			for (int p = 0; p<POPULATION_SIZE; p++) {		
+				if (p == bestCandidate) {
+					continue;
+				}
+				COPY_CHROMOZOME(population[bestCandidate], population[p]);
+				mutace(p);
+			
+			}
 
-		generation++;
+			generation++;
+		}
+		printf("Fitness: %d\n", bestFitness);
+		if (bestFitness == maxFitness) {
+			success++;
+		}
 	}
+	
+	printf("Success: %d/%d = %.2f %%\n", success, RUNS, success/(float)RUNS * 100);
 
 		
 	freePopulation();
