@@ -13,7 +13,9 @@
 #include <math.h>
 
 #define POPULATION_SIZE 5
-#define RUNS 10000000
+#define RUNS 100
+
+#define GENERATIONS 10000000
 
 #define PARAM_M 3
 #define PARAM_N 1
@@ -412,11 +414,12 @@ int main(int argc, char* argv[])
 	int fitnessValue;
 
 	int run = 0;
+	int generation = 0;
 
 
 	bestCandidate = -1;
 	bestFitness = -1;
-	while (run < RUNS) {
+	while (generation < GENERATIONS) {
 		neutral = 0;
 		for (int p = 0; p<POPULATION_SIZE; p++) {
 			fitnessValue = fitness(p);
@@ -441,7 +444,7 @@ int main(int argc, char* argv[])
 			
 		}
 
-		run++;
+		generation++;
 	}
 
 		
