@@ -5,7 +5,8 @@
  * Email:	xvacha03@stud.fit.vutbr.cz
  * Datum:	2012
  */
-
+ 
+#include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -26,6 +27,8 @@
 
 #define BLOCK_INDICES (PARAM_M*PARAM_N) 			//pocet bloku
 #define DATAFILE "parita4.txt"
+
+#define COPY_CHROMOZOME(from,to) (chromozome) memcpy(to, from, (chromozomeLength)*sizeof(int));
 
 typedef int *chromozome;             
 chromozome population[POPULATION_SIZE]; 
@@ -405,14 +408,15 @@ int main(int argc, char* argv[])
 	int bestPopulation;
 	int bestFitness;
 
-	int run =0;
+	int run = 0;
 	
-	
-	while (fitness(0) < 16 && run < 10000000){
+	COPY_CHROMOZOME(population[0], population[1]);
+
+	/*while (run < RUNS) {
 		mutace(0);
 		printChromozome(0);
 		run++;
-	}
+	}*/
 
 		
 	freePopulation();
