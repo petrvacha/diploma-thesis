@@ -13,8 +13,8 @@
 
 #define POPULATION_SIZE 5
 
-#define PARAM_M 8
-#define PARAM_N 1
+#define PARAM_M 1
+#define PARAM_N 2
 
 #define MUTATIONS 3
 #define FUNCTIONS 6				// pocet funkci
@@ -332,26 +332,32 @@ inline int fitness(int populationIndex)
 			}
 		
 		}
-		
-		
+		/*printf("0123|45|V\n");
 		for (int b=0; b<BLOCK_INDICES+param_in+param_out; b++) {
+			if (b == param_in || b == BLOCK_INDICES+param_in) {
+				printf ("|");
+			}
 			printf("%d", tmpPopulation[b]);
 		}
-		printf("\n");		
+		printf("\n");
+		*/		
 	
 		fail = 0;
-		printf("vystup:");
+		
+		/*printf("vystup: ");
 		for (int d=0, i=(param_in + BLOCK_INDICES); d < param_out; i++, d++) {
-			printf("%d", tmpPopulation[i]);
+			printf("<%d%d>", dataoutput[d][rowIndex],tmpPopulation[i]);
 			if (dataoutput[d][rowIndex] != tmpPopulation[i]) {
 				fail = 1;
 			}
 		}
+		
 		printf(" dataoutput:");
 		for (int d=0, i=(param_in + BLOCK_INDICES); d < param_out; i++, d++) {
 			printf("%d", dataoutput[d][rowIndex]);
 		}		
-		printf("\n");printf("\n");
+		printf("\n");
+		*/
 		if (fail == 0) {
 			fitness++;
 		}
