@@ -265,6 +265,8 @@ inline int fitness(int populationIndex)
 	int x;
 	int in1, in2;
 
+	
+	
 	for (int rowIndex= 0; rowIndex <arrayLength; rowIndex++) {
 
 		block = param_in;
@@ -379,7 +381,7 @@ int main(int argc, char* argv[])
 		}
 		printf("\n");break;
 	}
-	
+
 	fitness(0);
 	
 
