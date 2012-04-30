@@ -13,7 +13,7 @@
 #include <math.h>
 
 #define POPULATION_SIZE 5
-#define RUNS 10000
+#define RUNS 10000000
 
 #define PARAM_M 3
 #define PARAM_N 1
@@ -405,18 +405,50 @@ int main(int argc, char* argv[])
 	allocPopulation();
 	generationRandomPopulation();
 	
-	int bestPopulation;
+	int bestCandidate;
 	int bestFitness;
+	
+	int fitnessValue;
 
 	int run = 0;
-	
-	COPY_CHROMOZOME(population[0], population[1]);
 
-	/*while (run < RUNS) {
-		mutace(0);
-		printChromozome(0);
+	/*	
+	while (fitness(4) < 16){
+		mutace(4); 
+	//	printChromozome(0);
+ 	 	run++;
+ 	 }
+ 	 */
+
+	bestCandidate = -1;
+	bestFitness = -1;
+	while (run < RUNS) {
+		for (int p = 0; p<POPULATION_SIZE; p++) {
+			fitnessValue = fitness(p);
+			if (fitnessValue > bestFitness) {
+				bestFitness = fitnessValue;
+				bestCandidate = p;
+			}
+
+		}
+		
+		for (int p = 0; p<POPULATION_SIZE; p++) {
+			if (p == bestCandidate) {
+				continue;
+			}
+			//printf("%d\n", bestCandidate);
+			printChromozome(p);
+			COPY_CHROMOZOME(population[bestCandidate], population[p]);
+			printChromozome(p);
+			mutace(p);
+			printChromozome(p);
+			fitness(p);
+			printf("\n");
+			
+		}
+		
 		run++;
-	}*/
+	}
 
 		
 	freePopulation();
