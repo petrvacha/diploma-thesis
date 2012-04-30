@@ -12,6 +12,7 @@
 #include <math.h>
 
 #define POPULATION_SIZE 5
+#define RUNS 10000
 
 #define PARAM_M 3
 #define PARAM_N 1
