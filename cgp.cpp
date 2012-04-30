@@ -13,10 +13,10 @@
 
 #define POPULATION_SIZE 5
 
-#define PARAM_M 1
-#define PARAM_N 2
+#define PARAM_M 3
+#define PARAM_N 1
 
-#define MUTATIONS 3
+#define MUTATIONS 1
 #define FUNCTIONS 6				// pocet funkci
 #define L_BACK PARAM_M			// l-back
 #define BLOCK_IN 2 				// pocet vstupu
@@ -199,7 +199,7 @@ inline int generator(int gene)
 				
 				max = blockIndex - (PARAM_N - (blockIndex % PARAM_N));
 				min = blockIndex - PARAM_N*L_BACK;
-				
+				//if(gene == 4) printf("%d\n", min, max);
 				if(min<=param_in) {
 					result = rand() % (max+1);
 					
@@ -219,6 +219,7 @@ inline int generator(int gene)
 			}
 			
 		} else {
+			//result = 2;
 			result = rand() % FUNCTIONS;
 		}
 	} else { // vystup
@@ -332,7 +333,7 @@ inline int fitness(int populationIndex)
 			}
 		
 		}
-		/*printf("0123|45|V\n");
+	/*	printf("0123|456|V\n");
 		for (int b=0; b<BLOCK_INDICES+param_in+param_out; b++) {
 			if (b == param_in || b == BLOCK_INDICES+param_in) {
 				printf ("|");
@@ -344,14 +345,14 @@ inline int fitness(int populationIndex)
 	
 		fail = 0;
 		
-		/*printf("vystup: ");
+		//printf("vystup: ");
 		for (int d=0, i=(param_in + BLOCK_INDICES); d < param_out; i++, d++) {
-			printf("<%d%d>", dataoutput[d][rowIndex],tmpPopulation[i]);
+		//	printf("<%d%d>", dataoutput[d][rowIndex],tmpPopulation[i]);
 			if (dataoutput[d][rowIndex] != tmpPopulation[i]) {
 				fail = 1;
 			}
 		}
-		
+	/*		
 		printf(" dataoutput:");
 		for (int d=0, i=(param_in + BLOCK_INDICES); d < param_out; i++, d++) {
 			printf("%d", dataoutput[d][rowIndex]);
@@ -362,11 +363,33 @@ inline int fitness(int populationIndex)
 			fitness++;
 		}
 	}
-	printf("fitness = %d\n", fitness);
+	if(fitness != 8)
+		printf("fitness = %d\n", fitness);
  	return fitness;
 }
 
 
+/*
+ * Tisk chromozomu.
+ */
+void printChromozome(int populationIndex)
+{
+	
+	for (int i=0; i<chromozomeLength; i++) {
+		if(i !=0 && i % 3 == 0)
+			printf(")(");
+		if (i == 0)
+			printf("(");
+			
+		printf("%d",population[populationIndex][i]);
+
+		if (i == chromozomeLength-1)
+			printf(")");
+	}
+		
+	printf("\n");
+	
+}
 
 /*
  * Hlavni funkce.
@@ -377,19 +400,18 @@ int main(int argc, char* argv[])
 	readData();
 	allocPopulation();
 	generationRandomPopulation();
-
-
-	for (int p=0; p<POPULATION_SIZE; p++) {
-		for (int i=0; i<chromozomeLength; i++) {
-			if(i % 3 == 0)
-				printf(")(");
-			printf("%d",population[p][i]);
-		}
-		printf("\n");break;
-	}
-
-	fitness(0);
 	
+	int bestPopulation;
+	int bestFitness;
+
+	int run =0;
+	
+	
+	while (fitness(0) < 16 && run < 10000000){
+		mutace(0);
+		printChromozome(0);
+		run++;
+	}
 
 		
 	freePopulation();
